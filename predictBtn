@@ -1,0 +1,36 @@
+predictBtn.setOnClickListener(new View.OnClickListener() {
+             @Override
+            public void onClick(View view){
+
+                 try {
+                         Yolov5sFp16 model = Yolov5sFp16.newInstance(MainActivity.this);
+
+                         // Creates inputs for reference.
+                         TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 640, 640, 3}, DataType.FLOAT32);
+
+                         bitmap = Bitmap.createScaledBitmap(bitmap, 640 ,640,true );
+
+
+
+                        inputFeature0.loadBuffer(TensorImage.fromBitmap(bitmap).getBuffer());
+
+                         // Runs model inference and gets result.
+                         Yolov5sFp16.Outputs outputs = model.process(inputFeature0);
+
+                         TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+
+
+                         result.setText(labels[getMax(outputFeature0.getFloatArray())]+" ");
+
+                         // Releases model resources if no longer used.
+                         model.close();
+                     } catch (IOException e) {
+                         // TODO Handle the exception
+                     }
+
+
+
+
+                 }
+             });
+    }
